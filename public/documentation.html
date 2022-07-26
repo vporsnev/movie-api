@@ -114,22 +114,22 @@ table, th, td {
  <tr>
     <td>Allow users to add a movie to their list of favorites (showing only a text that a movie has been
         added)</td>
-    <td>/users/:id/:movieTitle</td>
-    <td>POST</td>
+    <td>/users/:username/movies/:movieID</td>
+    <td>PUT</td>
     <td>None</td>
     <td>A text that a movie has been added.</td>
 </tr>
 <tr>
     <td>Allow users to remove a movie from their list of favorites (showing only a text that a movie has
         been removed)</td>
-    <td>/users/:id/:movieTitle</td>
+    <td>/users/:username/movies/:movieID</td>
     <td>DELETE</td>
     <td>None</td>
     <td>A text that a movie has been removed.</td>
 </tr>
 <tr>
     <td>Allow existing users to deregister (showing only a text that a user email has been removed)</td>
-    <td>/users/:id</td>
+    <td>/users/:username</td>
     <td>DELETE</td>
     <td>None</td>
     <td>A text that a user email has been removed</td>
