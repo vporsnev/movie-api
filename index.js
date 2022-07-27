@@ -25,6 +25,25 @@ mongoose.connect('mongodb://localhost:27017/myFlixDB', {
   useUnifiedTopology: true
 });
 
+const {
+  check,
+  validationResult
+} = require('express-validator');
+
+const cors = require('cors');
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) { // If a specific origin isn’t found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message), false);
+    }
+    return callback(null, true);
+  }
+}));
+
 let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
@@ -46,7 +65,9 @@ app.get('/documentation', (req, res) => {
   });
 });
 
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
@@ -57,7 +78,9 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
     });
 });
 
-app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/users', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Users.find()
     .then((users) => {
       res.status(201).json(users);
@@ -68,7 +91,9 @@ app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) =
     });
 });
 
-app.get('/actors', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/actors', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Actors.find()
     .then((actors) => {
       res.status(201).json(actors);
@@ -79,7 +104,9 @@ app.get('/actors', passport.authenticate('jwt', { session: false }), (req, res) 
     });
 });
 
-app.get('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/users/:username', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Users.findOne({
       username: req.params.username
     })
@@ -92,7 +119,9 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), (r
     });
 });
 
-app.get('/movies/:title', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/:title', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Movies.find({
       title: req.params.title
     })
@@ -105,7 +134,9 @@ app.get('/movies/:title', passport.authenticate('jwt', { session: false }), (req
     });
 });
 
-app.get('/movies/genre/all/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/genre/all/:name', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Movies.find({
       'genre.name': req.params.name
     })
@@ -118,18 +149,9 @@ app.get('/movies/genre/all/:name', passport.authenticate('jwt', { session: false
     });
 });
 
-app.get('/movies/genres', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Movies.find({ 'genre': req.params.genre })
-    .then((movie) => {
-      res.json(movie.genre)
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
-
-app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/genre/:genreName', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Movies.findOne({
       'genre.name': req.params.genreName
     })
@@ -142,7 +164,9 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: fals
     });
 });
 
-app.get('/actors/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/actors/:name', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Actors.find({
       name: req.params.name
     })
@@ -155,7 +179,9 @@ app.get('/actors/:name', passport.authenticate('jwt', { session: false }), (req,
     });
 });
 
-app.get('/movies/directors/all/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/directors/all/:name', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Movies.find({
       'director.name': req.params.name
     })
@@ -168,7 +194,9 @@ app.get('/movies/directors/all/:name', passport.authenticate('jwt', { session: f
     });
 });
 
-app.get('/movies/directors/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/directors/:directorName', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Movies.findOne({
       'director.name': req.params.directorName
     })
@@ -182,7 +210,20 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
 });
 
 // POST requests
-app.post('/users', (req, res) => {
+app.post('/users', [
+  check('Username', 'Username is required').isLength({min: 4}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()
+], (req, res) => {
+  let errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      errors: errors.array()
+    });
+  }
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({
       username: req.body.username
     })
@@ -213,7 +254,9 @@ app.post('/users', (req, res) => {
 });
 
 // PUT requests
-app.put('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put('/users/:username', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Users.findOneAndUpdate({
       username: req.params.username
     }, {
@@ -236,7 +279,9 @@ app.put('/users/:username', passport.authenticate('jwt', { session: false }), (r
     });
 });
 
-app.put('/users/:username/movies/:movieID', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put('/users/:username/movies/:movieID', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Users.findOneAndUpdate({
       username: req.params.username
     }, {
@@ -257,8 +302,12 @@ app.put('/users/:username/movies/:movieID', passport.authenticate('jwt', { sessi
 });
 
 // DELETE requests
-app.delete('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndRemove({ username: req.params.username })
+app.delete('/users/:username', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
+  Users.findOneAndRemove({
+      username: req.params.username
+    })
     .then((user) => {
       if (!user) {
         res.status(400).send(req.params.username + ' was not found');
@@ -272,19 +321,26 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
     });
 });
 
-app.delete('/users/:username/movies/:movieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate({ username: req.params.username }, {
-     $pull: { favoriteMovies: req.params.movieID }
-   },
-   { new: true },
-  (err, updatedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
+app.delete('/users/:username/movies/:movieID', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
+  Users.findOneAndUpdate({
+      username: req.params.username
+    }, {
+      $pull: {
+        favoriteMovies: req.params.movieID
+      }
+    }, {
+      new: true
+    },
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
 });
 
 app.use('/documentation', express.static('public'));
@@ -295,6 +351,7 @@ app.use((err, req, res, next) => {
 });
 
 // listen for requests
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+ console.log('Listening on Port ' + port);
 });
