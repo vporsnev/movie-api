@@ -20,7 +20,12 @@ app.use(bodyParser.urlencoded({ //support parsing of application/x-www-form-urle
   extended: true
 }));
 
-mongoose.connect('mongodb://localhost:27017/myFlixDB', {
+// mongoose.connect('mongodb://localhost:27017/myFlixDB', {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// });
+
+mongoose.connect('process.env.CONNECTION_URI', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
