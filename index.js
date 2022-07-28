@@ -228,7 +228,7 @@ app.post('/users', [
       errors: errors.array()
     });
   }
-  let hashedPassword = Users.hashPassword(req.body.Password);
+  let hashedPassword = Users.hashPassword(req.body.password);
   Users.findOne({
       username: req.body.username
     })
