@@ -278,26 +278,24 @@ app.put('/users/:username', passport.authenticate('jwt', {
     });
 });
 
-app.put('/movies/:title', passport.authenticate('jwt', {
-  session: false
-}), (req, res) => {
+app.put('/movies/:title', (req, res) => {
   Movies.findOneAndUpdate({
       title: req.params.title
     }, {
       $set: {
-        title: req.body.title,
-        description: req.body.description,
-        imageURL: req.body.imageURL
+        title: req.params.title,
+        description: req.params.description,
+        imageURL: req.params.imageURL
       }
     }, {
       new: true
     },
-    (err, updatedUser) => {
+    (err, updatedMovie) => {
       if (err) {
         console.error(err);
         res.status(500).send('Error: ' + err);
       } else {
-        res.json(updatedUser);
+        res.json(updatedMovie);
       }
     });
 });
