@@ -283,9 +283,9 @@ app.put('/movies/:title', (req, res) => {
       title: req.params.title
     }, {
       $set: {
-        title: req.params.title,
-        description: req.params.description,
-        imageURL: req.params.imageURL
+        title: req.body.title,
+        description: req.body.description,
+        imageURL: req.body.imageURL
       }
     }, {
       new: true
