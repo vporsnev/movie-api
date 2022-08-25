@@ -88,9 +88,7 @@ app.get('/users', passport.authenticate('jwt', {
     });
 });
 
-app.get('/actors', passport.authenticate('jwt', {
-  session: false
-}), (req, res) => {
+app.get('/actors', (req, res) => {
   Actors.find()
     .then((actors) => {
       res.status(201).json(actors);
