@@ -14,7 +14,7 @@ let movieSchema = mongoose.Schema({
     bio: String,
     birth: String
   },
-  actors: [[{ type: mongoose.Schema.Types.ObjectId, ref: 'Actor'}]],
+  actors: [[{ type: mongoose.Schema.Types.name, ref: 'Actor'}]],
   imageURL: String,
   featured: Boolean
 });
