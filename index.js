@@ -53,7 +53,14 @@ app.use(express.static('public')); // Automatically routes all requests for stat
 // support parsing of application/json type post data
 // app.use(methodOverride());
 
-Movies.find().populate({path: 'actors', select: 'name'});
+Movies.
+  find().
+  populate('actors').
+  exec(function (err, story) {
+    if (err) return handleError(err);
+    console.log('The author is %s', movies.actors.name);
+    // prints "The author is Ian Fleming"
+  });
 
 // GET requests
 app.get('/', (req, res) => {
