@@ -55,8 +55,8 @@ app.use(express.static('public')); // Automatically routes all requests for stat
 
 Movies.
   find().
-  populate('actors').
-  exec(function (err, story) {
+  populate({ path: 'actors', select: 'name' });
+  exec(function (err) {
     if (err) return handleError(err);
     console.log('The author is %s', movies.actors.name);
     // prints "The author is Ian Fleming"
