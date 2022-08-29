@@ -42,7 +42,6 @@ let actorSchema = mongoose.Schema({
   movies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie'}]
 });
 
-
 let Movie = mongoose.model('Movie', movieSchema);
 let User = mongoose.model('User', userSchema);
 let Actor = mongoose.model('Actor', actorSchema);

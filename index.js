@@ -53,6 +53,8 @@ app.use(express.static('public')); // Automatically routes all requests for stat
 // support parsing of application/json type post data
 // app.use(methodOverride());
 
+Movies.find().populate({path: 'Actors', select: 'name'});
+
 // GET requests
 app.get('/', (req, res) => {
   res.send('Welcome to my movie app!');
