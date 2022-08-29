@@ -174,6 +174,17 @@ app.get('/actors/:name', passport.authenticate('jwt', {
     });
 });
 
+app.get('/actors/:_id', (req, res) => {
+  Actors.findById()
+    .then((movie) => {
+      res.json(movie)
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
 app.get('/movies/directors/all/:name', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
