@@ -64,7 +64,9 @@ app.get('/documentation', (req, res) => {
   });
 });
 
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
@@ -88,7 +90,9 @@ app.get('/users', passport.authenticate('jwt', {
     });
 });
 
-app.get('/actors', (req, res) => {
+app.get('/actors', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   Actors.find()
     .then((actors) => {
       res.status(201).json(actors);
