@@ -290,17 +290,31 @@ app.put('/movies/:title', (req, res) => {
       $set: {
         title: req.body.title,
         year: req.body.year,
-        genre: { name: req.body.genre.name,
-                 description: req.body.genre.description
-               },
-        actors: [{
-          name: req.body.name,
-          bio: req.body.bio,
-          birth: req.body.birth
-        }],
         description: req.body.description,
         imageURL: req.body.imageURL
       }
+    }, {
+      new: true
+    },
+    (err, updatedMovie) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedMovie);
+      }
+    });
+});
+
+app.put('/movies/:title/actors', (req, res) => {
+  Movies.findOneAndUpdate({
+      title: req.params.title
+    }, {
+      $set: [{
+        name: req.body.name,
+        bio: req.body.bio,
+        birth: req.body.birth,
+      }]
     }, {
       new: true
     },
