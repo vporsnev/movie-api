@@ -290,6 +290,7 @@ app.put('/movies/:title', (req, res) => {
         title: req.body.title,
         year: req.body.year,
         description: req.body.description,
+        actors: req.body.name,
         imageURL: req.body.imageURL
       }
     }, {
