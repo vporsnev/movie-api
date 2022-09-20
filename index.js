@@ -291,14 +291,8 @@ app.put('/movies/:title', (req, res) => {
         title: req.body.title,
         year: req.body.year,
         director: req.body.director,
-        genre: { name: req.body.genreName,
-                 description: req.body.genreDescription
-               },
-        actors: [{
-          name: req.body.actorsName,
-          bio: req.body.actorsBio,
-          birth: req.body.actorsBirth
-        }],
+        genre: req.body.genre,
+        actors: req.body.actors,
         description: req.body.description,
         imageURL: req.body.imageURL
       }
