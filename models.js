@@ -14,7 +14,11 @@ let movieSchema = mongoose.Schema({
     bio: String,
     birth: String
   },
-  actors: [[{ type: mongoose.Schema.Types.ObjectId, ref: 'Actor'}]],
+  actors: {
+    name: String,
+    bio: String,
+    birth: String
+  },
   imageURL: String,
   featured: Boolean
 });
@@ -35,17 +39,8 @@ userSchema.methods.validatePassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-let actorSchema = mongoose.Schema({
-  name: {type: String, required: true},
-  born: {type: String, required: true},
-  bio: String,
-  movies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie'}]
-});
-
 let Movie = mongoose.model('Movie', movieSchema);
 let User = mongoose.model('User', userSchema);
-let Actor = mongoose.model('Actor', actorSchema);
 
 module.exports.Movie = Movie;
 module.exports.User = User;
-module.exports.Actor = Actor;

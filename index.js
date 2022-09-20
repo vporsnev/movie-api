@@ -90,19 +90,6 @@ app.get('/users', passport.authenticate('jwt', {
     });
 });
 
-app.get('/actors', passport.authenticate('jwt', {
-  session: false
-}), (req, res) => {
-  Actors.find()
-    .then((actors) => {
-      res.status(201).json(actors);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
-
 app.get('/users/:username', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -163,14 +150,14 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', {
     });
 });
 
-app.get('/actors/:name', passport.authenticate('jwt', {
+app.get('/movies/actors/:actorName', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
-  Actors.find({
-      name: req.params.name
+  Movies.findOne({
+      'actors.name': req.params.actorName
     })
     .then((movie) => {
-      res.json(movie)
+      res.json(movie.actor)
     })
     .catch((err) => {
       console.error(err);
@@ -178,8 +165,12 @@ app.get('/actors/:name', passport.authenticate('jwt', {
     });
 });
 
-app.get('/actors/:_id', (req, res) => {
-  Actors.findById()
+app.get('/movies/actors/all/:name', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
+  Movies.find({
+      'actor.name': req.params.name
+    })
     .then((movie) => {
       res.json(movie)
     })
