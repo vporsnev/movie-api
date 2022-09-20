@@ -282,25 +282,6 @@ app.put('/users/:username', passport.authenticate('jwt', {
     });
 });
 
-app.post('/movies/:title', (req, res) => {
-  Movies.findOneAndUpdate({
-      title: req.params.title
-    }, {
-      $push: {
-        actors: req.body.name
-      }
-    }, {
-      new: true
-    },
-    (err, updatedMovie) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      } else {
-        res.json(updatedMovie);
-      }
-    });
-});
 
 app.put('/movies/:title', (req, res) => {
   Movies.findOneAndUpdate({
@@ -309,8 +290,10 @@ app.put('/movies/:title', (req, res) => {
       $set: {
         title: req.body.title,
         year: req.body.year,
+        genre: { name: req.body.name,
+                 description: req.body.description
+               },
         description: req.body.description,
-        actors: req.body.name,
         imageURL: req.body.imageURL
       }
     }, {
