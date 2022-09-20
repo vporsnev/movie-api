@@ -290,9 +290,19 @@ app.put('/movies/:title', (req, res) => {
       $set: {
         title: req.body.title,
         year: req.body.year,
+        director: {
+          name: req.body.name,
+          bio: req.body.bio,
+          birth: req.body.birth
+        },
         genre: { name: req.body.name,
                  description: req.body.description
                },
+        actors: [{
+          name: req.body.name,
+          bio: req.body.bio,
+          birth: req.body.birth
+        }],
         description: req.body.description,
         imageURL: req.body.imageURL
       }
