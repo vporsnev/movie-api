@@ -282,6 +282,26 @@ app.put('/users/:username', passport.authenticate('jwt', {
     });
 });
 
+app.post('/movies/:title', (req, res) => {
+  Movies.findOneAndUpdate({
+      title: req.params.title
+    }, {
+      $push: {
+        actors: req.body.name
+      }
+    }, {
+      new: true
+    },
+    (err, updatedMovie) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedMovie);
+      }
+    });
+});
+
 app.put('/movies/:title', (req, res) => {
   Movies.findOneAndUpdate({
       title: req.params.title
@@ -289,8 +309,6 @@ app.put('/movies/:title', (req, res) => {
       $set: {
         title: req.body.title,
         year: req.body.year,
-        genre: req.params.name,
-        genre: req.params.description,
         description: req.body.description,
         actors: req.body.name,
         imageURL: req.body.imageURL
