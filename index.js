@@ -150,14 +150,14 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', {
     });
 });
 
-app.get('/movies/actors/:actorsName', passport.authenticate('jwt', {
+app.get('/movies/actors/:actor', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
   Movies.findOne({
-      'actors.name': req.params.actorsName
+      'actor.name': req.params.actor
     })
     .then((movie) => {
-      res.json(movie.actors)
+      res.json(movie.actor)
     })
     .catch((err) => {
       console.error(err);

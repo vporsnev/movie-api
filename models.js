@@ -15,6 +15,7 @@ let movieSchema = mongoose.Schema({
     birth: String
   },
   actors: [{
+    actor: String,
     name: String,
     bio: String,
     birth: String
