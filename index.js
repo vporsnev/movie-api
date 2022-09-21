@@ -150,36 +150,6 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', {
     });
 });
 
-app.get('/movies/actors/actor/:name', passport.authenticate('jwt', {
-  session: false
-}), (req, res) => {
-  Movies.findOne({
-      'actors.actor.name': req.params.name
-    })
-    .then((movie) => {
-      res.json(movie.actors.actor)
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
-
-app.get('/movies/actors/all/:name', passport.authenticate('jwt', {
-  session: false
-}), (req, res) => {
-  Movies.find({
-      'actors.name': req.params.name
-    })
-    .then((movie) => {
-      res.json(movie)
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
-
 app.get('/movies/directors/all/:name', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
