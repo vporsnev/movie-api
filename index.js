@@ -154,10 +154,10 @@ app.get('/movies/actors/:actor', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
   Movies.findOne({
-      'actor.name': req.params.actor
+      'actors.actor': req.params.actor
     })
     .then((movie) => {
-      res.json(movie.actor)
+      res.json(movie.actors.actor)
     })
     .catch((err) => {
       console.error(err);
