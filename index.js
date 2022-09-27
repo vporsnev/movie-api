@@ -277,7 +277,7 @@ app.put('/movies/:title', (req, res) => {
     });
 });
 
-app.put('/users/:username/movies/:movieID', passport.authenticate('jwt', {
+app.post('/users/:username/movies/:movieID', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
   Users.findOneAndUpdate({
