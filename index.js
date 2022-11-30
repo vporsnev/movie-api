@@ -40,7 +40,7 @@ const {
 
 const cors = require('cors');
 let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:50056', 'http://localhost:4200', 'https://myflixsify.netlify.app' ];
-
+app.use(express.static('public'));
 app.use(cors());
 
 let auth = require('./auth')(app);
