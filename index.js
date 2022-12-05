@@ -54,6 +54,13 @@ app.use(express.static('public')); // Automatically routes all requests for stat
 // app.use(methodOverride());
 
 // GET requests
+// Welcome message
+/**
+ * GET welcome message from '/' endpoint
+ * @name welcomeMessage
+ * @kind function
+ * @returns Welcome message
+ */
 app.get('/', (req, res) => {
   res.send('Welcome to my movie app!');
 });
@@ -64,6 +71,15 @@ app.get('/documentation', (req, res) => {
   });
 });
 
+// READ all movies
+/**
+ * GET a list of all movies
+ * Request body: Bearer Token
+ * @name getAllMovies
+ * @kind function
+ * @returns array of movie objects
+ * @requires passport
+ */
 app.get('/movies', (req, res) => {
   Movies.find()
     .then((movies) => {
@@ -88,6 +104,16 @@ app.get('/users', passport.authenticate('jwt', {
     });
 });
 
+// READ a user by username
+/**
+ * GET user data on a single user
+ * Request body: Bearer token
+ * @name getUser
+ * @kind function
+ * @param Username
+ * @returns user object
+ * @requires passport
+ */
 app.get('/users/:username', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -118,6 +144,16 @@ app.get('/users/:username/movies', passport.authenticate('jwt', {
     });
 });
 
+// READ one movie by title
+/**
+ * GET data about a single movie by title
+ * Request body: Bearer token
+ * @name getMovie
+ * @kind function
+ * @param Title
+ * @returns movie object
+ * @requires passport
+ */
 app.get('/movies/:title', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -133,6 +169,16 @@ app.get('/movies/:title', passport.authenticate('jwt', {
     });
 });
 
+// READ All movies by genre
+/**
+ * GET movies by genre
+ * Request body: Bearer token
+ * @name getGenreAll
+ * @kind function
+ * @param genreName
+ * @returns movie objects
+ * @requires passport
+ */
 app.get('/movies/genre/all/:name', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -148,6 +194,16 @@ app.get('/movies/genre/all/:name', passport.authenticate('jwt', {
     });
 });
 
+// READ genre by name
+/**
+ * GET data about a genre by genre name
+ * Request body: Bearer token
+ * @name getGenre
+ * @kind function
+ * @param genreName
+ * @returns genre object
+ * @requires passport
+ */
 app.get('/movies/genre/:genreName', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -163,6 +219,16 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', {
     });
 });
 
+// READ All movies by director
+/**
+ * GET movies by director
+ * Request body: Bearer token
+ * @name getDirectorAll
+ * @kind function
+ * @param directorName
+ * @returns movie objects
+ * @requires passport
+ */
 app.get('/movies/directors/all/:name', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -178,6 +244,16 @@ app.get('/movies/directors/all/:name', passport.authenticate('jwt', {
     });
 });
 
+// READ director by name
+/**
+ * GET data about a director by name
+ * Request body: Bearer token
+ * @name getDirector
+ * @kind function
+ * @param directorName
+ * @returns director object
+ * @requires passport
+ */
 app.get('/movies/directors/:directorName', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -194,6 +270,21 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', {
 });
 
 // POST requests
+// CREATE new user
+/**
+ * POST new user. Username, password, and Email are required fields.
+ * Request body: Bearer token, JSON with user information in this format:
+ * {
+ *  ID: Integer,
+ *  Username: String,
+ *  Password: String,
+ *  Email: String,
+ *  Birthday: Date
+ * }
+ * @name createUser
+ * @kind function
+ * @returns user object
+ */
 app.post('/users', [
   check('username', 'Username is required').isLength({min: 4}),
   check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
@@ -240,6 +331,22 @@ app.post('/users', [
 });
 
 // PUT requests
+// UPDATE user by username
+/**
+ * PUT new user info
+ * Request body: Bearer token, updated user info in the following format:
+ * {
+ *  Username: String, (required)
+ *  Password: String, (required)
+ *  Email: String, (required)
+ *  Birthday: Date
+ * }
+ * @name updateUser
+ * @kind function
+ * @param Username
+ * @returns user object
+ * @requires passport
+ */
 app.put('/users/:username', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -265,7 +372,23 @@ app.put('/users/:username', passport.authenticate('jwt', {
     });
 });
 
-
+// UPDATE movie info
+/**
+ * PUT new movie info
+ * Request body: updated movie info in the following format:
+ * {
+ *  Title: String,
+ *  Year: String,
+ *  Director: String,
+ *  Genre: String
+ *  Description: String,
+ *  imageURL: String
+ * }
+ * @name updateMovie
+ * @kind function
+ * @param Title
+ * @returns movie object
+ */
 app.put('/movies/:title', (req, res) => {
   Movies.findOneAndUpdate({
       title: req.params.title
@@ -292,6 +415,17 @@ app.put('/movies/:title', (req, res) => {
     });
 });
 
+// POST favorite movie for a user
+/**
+ * POST a movie to a user's list of favorites
+ * Request body: Bearer token
+ * @name createFavorite
+ * @kind function
+ * @param Username
+ * @param MovieID
+ * @returns user object
+ * @requires passport
+ */
 app.post('/users/:username/movies/:movieID', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -315,6 +449,16 @@ app.post('/users/:username/movies/:movieID', passport.authenticate('jwt', {
 });
 
 // DELETE requests
+// DELETE user by username
+/**
+ * DELETE a user by username
+ * Request body: Bearer token
+ * @name deleteUser
+ * @kind function
+ * @param Username
+ * @returns Success message
+ * @requires passport
+ */
 app.delete('/users/:username', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -334,6 +478,17 @@ app.delete('/users/:username', passport.authenticate('jwt', {
     });
 });
 
+// DELETE favorite movie for a user
+/**
+ * DELETE a movie from a user's list of favorites
+ * Request body: Bearer token
+ * @name deleteFavorite
+ * @kind function
+ * @param Username
+ * @param MovieID
+ * @returns user object
+ * @requires passport
+ */
 app.delete('/users/:username/movies/:movieID', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
@@ -358,6 +513,11 @@ app.delete('/users/:username/movies/:movieID', passport.authenticate('jwt', {
 
 app.use('/documentation', express.static('public'));
 
+/**
+ * Error handler
+ * @name errorHandler
+ * @kind function
+ */
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
