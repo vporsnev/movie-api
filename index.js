@@ -1,12 +1,11 @@
-const express = require('express'),
-  app = express(),
-  bodyParser = require('body-parser'),
-  uuid = require('uuid'),
-  morgan = require('morgan'),
-  mongoose = require('mongoose'),
-  Models = require('./models.js');
+const express = require('express');
+const dotenv = require("dotenv");
 
-const { check, validationResult } = require('express-validator');
+dotenv.config();
+  morgan = require('morgan'),
+  fs = require('fs'),
+  path = require('path'),
+  uuid = require('uuid');
 
 const mongoose = require('mongoose');
 const Models = require('./models.js');
@@ -29,7 +28,7 @@ app.use(bodyParser.urlencoded({ //support parsing of application/x-www-form-urle
 //   useUnifiedTopology: true
 // });
 
-mongoose.connect( process.env.CONNECTION_URI, {
+mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
